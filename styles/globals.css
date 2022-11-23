@@ -1,9 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 a {
@@ -24,3 +26,151 @@ a {
     background: black;
   }
 }
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 97%;
+  height: 450px;
+  border-radius: 5px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+  padding: 2px 16px;
+}
+
+.details-page-area{
+  background-color:#F3F4F8;
+  min-height: 100vh;
+
+}
+
+.details-page-left-side-wrapper{
+  background-color: #FFFFFF;
+  margin-top: 20px;
+  width: 100%;
+  min-height: 80vh;
+  border-radius: 5px;
+  padding: 20px 20px;
+
+
+}
+.details-page-right-side-wrapper{
+  background-color: #FFFFFF;
+  border-radius: 5px;
+
+  margin-top: 20px;
+  min-height: 80vh
+
+}
+/* .details-page-left-side-wrapper .post-details {
+  padding: 20px 20px;
+} */
+.details-page-left-side-wrapper .post-details  h3 {
+  font-size: 40px;
+  line-height: 45px;
+  font-weight: 500;
+  font-family: serif;
+
+}
+
+
+
+.details-page-right-side-wrapper .post-details  h3 {
+  font-size: 18px;
+  line-height: 27px;
+  font-weight: 500;
+  font-family: serif;
+
+}
+.details-page-right-side-wrapper .post-details{
+  margin-top: 30px
+
+}
+
+.details-page-left-side-wrapper.post-details .blog-post-img {
+  position: relative;
+  margin-top: 30px;
+  padding: 20px 20px;
+
+}
+
+.details-page-right-side-wrapper.post-details .blog-post-img {
+  position: relative;
+  margin-top: 30px;
+  padding: 20px 20px;
+
+}
+.details-page-left-side-wrapper .post-details .blog-post-img .date {
+  position: absolute;
+  padding: 4px 10px;
+  background-color: #009ef79c;
+  border-radius: 4px;
+  margin-top: -29px;
+}
+
+.details-page-right-side-wrapper .post-details .blog-post-img .date {
+  position: absolute;
+  padding: 4px 10px;
+  background-color: #009ef79c;
+  border-radius: 4px;
+  margin-top: -29px;
+}
+
+.post-description p{
+  text-align: justify !important;
+  font-size: 14px !important;
+  text-align: justify;
+  font-family: "Poppins" !important;
+}
+
+     /*============================================
+               MenuBar
+============================================== */
+
+.menubar-content ul li {
+  line-height: 48px;
+  margin-right: 18px;
+  margin-left: 20px;
+  display: inline-block;
+  color: black;
+  font-weight: bold;
+}
+
+.menubar-content ul li:hover{
+color: #1BB372;
+}
+
+.menubar-content ul {
+margin-top: 13px;
+}
+
+.menubar-content ul li:last-child {
+  margin-right: 0;
+}
+
+.menubar-content {
+  float: right !important;
+}
+.menubar-content ul{
+padding-top: 20px;
+}
+/* 
+.menubar-logo{
+padding-top: 20px;
+padding-bottom: 20px;
+} */
+
+.menubar-logo img {
+height: 95px;
+
+margin-top: 14px;
+}
+
+
+
+
