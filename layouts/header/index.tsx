@@ -1,6 +1,5 @@
 import React from "react";
-import MenuBar from "../../MenuBar";
-
+import MenuBar from "../../components/MenuBar";
 const Header = () => {
   return (
     <>

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 import Nav from "./nav";
 import PostCard from "./postCard";
-import Layout from "./layout";
+import Layout from "../layouts/index";
 
 export default function Home() {
   // const [data, setData] = useState<any>("");

@@ -3,7 +3,7 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllTodos } from "./Components/Services/Actions/todosAction";
+import { getAllTodos } from "../state-management/Services/Actions/todosAction";
 
 import { Dna } from "react-loader-spinner";
 export default function PostCard({ postdata }: any) {
