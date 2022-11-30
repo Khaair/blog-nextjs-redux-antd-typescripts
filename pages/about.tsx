@@ -1,10 +1,11 @@
 import React from "react";
 import { Col, Row } from "antd";
 import Nav from "./nav";
+import Layout from "../layouts/index";
+
 export default function About() {
   return (
-    <div>
-      <Nav />
+    <Layout>
       <div className="about-area">
         <div className="container">
           <Row className="bg-primary mt-5">
@@ -45,6 +46,6 @@ export default function About() {
           </Row>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }

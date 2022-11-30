@@ -1,10 +1,13 @@
+import { createWrapper } from "next-redux-wrapper";
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import Script from "next/script";
+
 import { Provider } from "react-redux";
-import store from "../state-management/Services/Store";
-export default function App({ Component, pageProps }: AppProps) {
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from "../state-management/store/store";
+function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
@@ -22,8 +25,14 @@ export default function App({ Component, pageProps }: AppProps) {
         crossOrigin="anonymous"
       />
       <Provider store={store}>
-        <Component {...pageProps} />
+        <PersistGate persistor={persistor}>
+          <Component {...pageProps} />
+        </PersistGate>
       </Provider>
     </>
   );
 }
+
+const makeStore = () => store;
+const wrapper = createWrapper(makeStore);
+export default wrapper.withRedux(App);

@@ -9,7 +9,6 @@ export default function form() {
     <div>
       <div className="form-area">
         <div className="container">
-          <Nav />
           <Row className="mt-5">
             <Col span={24}>
               <Form form={form}>
