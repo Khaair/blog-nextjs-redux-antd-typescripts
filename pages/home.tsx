@@ -5,7 +5,7 @@ export default function Home() {
     <>
       <Row className="mt-5 text-center">
         <Col span={24}>
-          <h1 className="blog-head-title">Blogging to document your life</h1>
+          <h1 className="blog-head-title">BD News Portal</h1>
           <p>
             In other words, the digital journal. Maybe you want to document life
             as a mother, your fashion sense, your adventures as your travel, or

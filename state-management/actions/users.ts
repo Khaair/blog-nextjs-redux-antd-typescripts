@@ -28,7 +28,7 @@ export const fetchUsers = () => {
   return (dispatch: any) => {
     dispatch(fetchPostsLoad());
     axios
-      .get(`${process.env.NEXT_PUBLIC_APP_READER_BASE_URL}/users`, {
+      .get(`${process.env.NEXT_PUBLIC_APP_READER_BASE_URL}/showusers`, {
         headers: {
           "Content-Type": "application/json",
         },

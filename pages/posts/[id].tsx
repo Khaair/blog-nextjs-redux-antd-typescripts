@@ -8,6 +8,7 @@ import { fetchUsers } from "../../state-management/actions/users";
 
 import { fetchPosts } from "../../state-management/actions/posts";
 import Link from "next/link";
+import { log } from "console";
 function Details({
   posts,
   postsInfo,
@@ -16,15 +17,14 @@ function Details({
   users,
   userInfo,
 }: any) {
-  console.log("get post data", postsInfo);
-  console.log("get comment data", commentInfo);
   const router = useRouter();
-  console.log("get query", router);
-  const { id } = router.query;
-  const [singlePostInfo, setSinglePostInfo] = useState<any>(undefined);
-  const [getPost, setPosts] = useState<[]>([]);
 
-  console.log(singlePostInfo, "singlePostInfo haha here");
+  const { id } = router.query;
+  console.log(id, "pooooo idd");
+  const [singlePostInfo, setSinglePostInfo] = useState<any>(undefined);
+  const [getPost, setPosts] = useState([]);
+  console.log(postsInfo, "postsInfo here haha");
+
   // dispatch post and comments
   useEffect(() => {
     posts();
@@ -35,21 +35,26 @@ function Details({
       return {
         ...post,
         comments: commentInfo?.commentData?.filter(
-          (comment: any) => comment?.postId === Number(id)
+          (comment: any) => comment?.postId === id
         ),
         users: userInfo?.usersData?.filter(
-          (user: any) => post?.id === user?.id
+          (user: any) => post?.userId === user?._id
         ),
       };
     });
     setPosts(getPosts);
-    const singlePosts = getPosts?.find((post: any) => {
-      if (post?.id === Number(id)) {
+    console.log(getPosts, "getPosts here");
+    const singlePosts = postsInfo?.postsData?.find((post: any) => {
+      console.log(post?._id, "post id");
+      console.log(id, "post id query");
+
+      if (post?._id === id) {
         return {
           ...post,
         };
       }
     });
+    console.log(singlePosts, "singlePosts yoyo");
     setSinglePostInfo(singlePosts);
   }, [
     commentInfo?.commentData,
@@ -59,7 +64,6 @@ function Details({
     userInfo?.usersData,
   ]);
 
-  console.log(id, "id hahaha");
   return (
     <Layout>
       <div className="details-page-area">
@@ -71,7 +75,7 @@ function Details({
                   <div className="post-details">
                     <h3>{singlePostInfo?.title}</h3>
                     <h5 style={{ paddingTop: "10px", color: "gray" }}>
-                      {singlePostInfo?.users[0]?.name}
+                      {/* {singlePostInfo?.users[0]?.name} */}
                     </h5>
 
                     <p>{singlePostInfo?.body}</p>
@@ -121,8 +125,8 @@ function Details({
                     <hr />
 
                     {getPost?.splice(0, 3)?.map((post: any) => (
-                      <div className="sidebar-single-post" key={post?.id}>
-                        <Link href={`/posts/${post?.id}`}>
+                      <div className="sidebar-single-post" key={post?._id}>
+                        <Link href={`/posts/${post?._id}`}>
                           {" "}
                           <h4>{post?.title}</h4>
                         </Link>

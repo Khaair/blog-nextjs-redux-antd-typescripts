@@ -1,15 +1,12 @@
-import { Avatar, Col, Row } from "antd";
+import { Avatar, Col, Modal, Row, Skeleton } from "antd";
 import { connect } from "react-redux";
 import { fetchComments } from "../state-management/actions/comments";
 import { fetchUsers } from "../state-management/actions/users";
-
 import { fetchPosts } from "../state-management/actions/posts";
 import { DeleteOutlined, CommentOutlined } from "@ant-design/icons";
 import { Card } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-
-import { Dna } from "react-loader-spinner";
 import Home from "./home";
 function PostCard({
   posts,
@@ -23,13 +20,29 @@ function PostCard({
 
   const [getPost, setPosts] = useState<any>([]);
   const [getPhoto, setPhoto] = useState<any>([]);
-  console.log(getPost, "getPost lool hhahaaaaa");
 
   const [getUser, setUsers] = useState<any>([]);
 
   const [singlePostId, setSinglePostId] = useState<any>(undefined);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  console.log(getPost, "getPost ok here lool");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  console.log(postsInfo, "postsInfo here");
+  console.log(userInfo, "userInfo here");
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+    alert("After clicking ok delete api will call");
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   // dispatch post and comments
   useEffect(() => {
     posts();
@@ -47,12 +60,12 @@ function PostCard({
           (comment: any) => post?.id === comment?.postId
         ),
         users: userInfo?.usersData?.filter(
-          (user: any) => post?.id === user?.id
+          (user: any) => post?.userId === user?._id
         ),
+
         photos: getPhoto?.filter((photo: any) => post?.id === photo?.id),
       };
     });
-    console.log("get actual post", posts);
     setPosts(posts);
   }, [
     commentInfo?.commentData,
@@ -88,18 +101,15 @@ function PostCard({
 
         <Row gutter={16} className="mt-5 ">
           {postsInfo?.loading ? (
-            <div className="text-center">
-              <Dna
-                visible={true}
-                height="300"
-                width="200"
-                ariaLabel="dna-loading"
-                wrapperStyle={{}}
-                wrapperClass="dna-wrapper"
-              />
-            </div>
+            <Col span={24}>
+              <div className="dna-wrapper-area">
+                <Skeleton active />
+              </div>
+            </Col>
           ) : (
             getPost?.slice(0, 25)?.map((item: any, index: any) => {
+              console.log(getPost, "loading");
+
               return (
                 <Col className="text-center" span={24} lg={24} key={index}>
                   <div className="container">
@@ -110,55 +120,67 @@ function PostCard({
                         //   alt="example"
                         //   src="https://dgerma-s3access.s3.amazonaws.com/public/products/variants/p5La4Zmxi-red-and-light-blue-fabric-with-large-folds.jpg"
                         // />
-                        <span
-                          className="container text-left"
-                          style={{ paddingTop: "20px" }}
-                        >
-                          {" "}
-                          Author: {item?.users[0]?.name}
-                        </span>
+                        <Link href={`/posts/${item?._id}`}>
+                          <h2
+                            className="container text-left"
+                            style={{ paddingTop: "20px" }}
+                          >
+                            {" "}
+                            {item?.title}
+                          </h2>
+                        </Link>
                       }
                       actions={[
                         <>
                           <div>
-                            <span
-                              style={{
-                                fontSize: "17px",
-                                color: "orange",
-                              }}
-                            >
-                              {item?.comments?.length}
-                            </span>{" "}
-                            <CommentOutlined
-                              key="comment"
-                              style={{
-                                fontSize: "19px",
-                                color: "green",
-                              }}
-                            />
+                            <Link href={`/posts/${item?.id}`}>
+                              <span
+                                style={{
+                                  fontSize: "17px",
+                                  color: "orange",
+                                }}
+                              >
+                                {item?.comments?.length}
+                              </span>{" "}
+                              <CommentOutlined
+                                key="comment"
+                                style={{
+                                  fontSize: "19px",
+                                  color: "green",
+                                }}
+                              />
+                            </Link>
                           </div>
                           ,
                         </>,
                         <DeleteOutlined
                           key="delete"
                           style={{ fontSize: "19px", color: "red" }}
+                          onClick={showModal}
                         />,
                       ]}
                     >
-                      <Link href={`/posts/${item?.id}`}>
-                        <Meta
-                          avatar={<Avatar src={item?.photos[0]?.url} />}
-                          title={item?.title}
-                          description={item?.body}
-                          style={{ textAlign: "left" }}
-                        />
-                      </Link>
+                      <Meta
+                        avatar={<Avatar src={item?.photos[0]?.url} />}
+                        title={item?.users[0]?.username}
+                        description={item?.body}
+                        style={{ textAlign: "left" }}
+                      />
                     </Card>
                   </div>
                 </Col>
               );
             })
           )}
+          <Modal
+            title="Are you sure to delete this post?"
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
+            <br />
+            <br />
+          </Modal>
         </Row>
       </div>
     </div>

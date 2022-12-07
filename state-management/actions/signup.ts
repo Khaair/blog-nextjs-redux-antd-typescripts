@@ -1,34 +1,34 @@
 import axios from "axios";
 import {
-  FETCH_POSTS_FAILURE_REQUEST,
-  FETCH_POSTS_SUCCESS_REQUEST,
-  FETCH_POSTS__REQUEST,
+  FETCH_SIGNUP_FAILURE_REQUEST,
+  FETCH_SIGNUP_SUCCESS_REQUEST,
+  FETCH_SIGNUP__REQUEST,
 } from "../types";
 
 export const fetchPostsLoad = () => {
   return {
-    type: FETCH_POSTS__REQUEST,
+    type: FETCH_SIGNUP__REQUEST,
   };
 };
-export const fetchPostSuccess = (postInfo: any) => {
+export const fetchPostSuccess = (signupInfo: any) => {
   return {
-    type: FETCH_POSTS_SUCCESS_REQUEST,
-    payload: postInfo,
+    type: FETCH_SIGNUP_SUCCESS_REQUEST,
+    payload: signupInfo,
   };
 };
 
 export const fetchPostFailed = (error: any) => {
   return {
-    type: FETCH_POSTS_FAILURE_REQUEST,
+    type: FETCH_SIGNUP_FAILURE_REQUEST,
     payload: error,
   };
 };
 
-export const fetchPosts = () => {
+export const sendSignUpData = (value: any) => {
   return (dispatch: any) => {
     dispatch(fetchPostsLoad());
     axios
-      .get(`${process.env.NEXT_PUBLIC_APP_READER_BASE_URL}/showposts`, {
+      .post(`${process.env.NEXT_PUBLIC_APP_READER_BASE_URL}/auth/signup`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -41,3 +41,5 @@ export const fetchPosts = () => {
       });
   };
 };
+
+
