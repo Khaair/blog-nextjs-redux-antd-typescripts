@@ -1,10 +1,14 @@
 import { Col, Row } from "antd";
 import React from "react";
+import SearchBar from "./searchBar";
 export default function Home() {
   return (
     <>
       <Row className="mt-5 text-center">
         <Col span={24}>
+          <div>
+            <SearchBar />
+          </div>
           <h1 className="blog-head-title">BD News Portal</h1>
           <p>
             In other words, the digital journal. Maybe you want to document life

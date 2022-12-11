@@ -8,6 +8,7 @@ import { Card } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Home from "./home";
+import axios from "axios";
 function PostCard({
   posts,
   postsInfo,
@@ -20,25 +21,17 @@ function PostCard({
 
   const [getPost, setPosts] = useState<any>([]);
   const [getPhoto, setPhoto] = useState<any>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const [getUser, setUsers] = useState<any>([]);
 
   const [singlePostId, setSinglePostId] = useState<any>(undefined);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  console.log(postsInfo, "postsInfo here");
-  console.log(userInfo, "userInfo here");
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-    alert("After clicking ok delete api will call");
-  };
+  // const handleOk = () => {
+  //   setIsModalOpen(false);
+  //   alert("After clicking ok delete api will call");
+  // };
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -57,7 +50,7 @@ function PostCard({
       return {
         ...post,
         comments: commentInfo?.commentData?.filter(
-          (comment: any) => post?.id === comment?.postId
+          (comment: any) => post?._id === comment?.postId
         ),
         users: userInfo?.usersData?.filter(
           (user: any) => post?.userId === user?._id
@@ -108,8 +101,6 @@ function PostCard({
             </Col>
           ) : (
             getPost?.slice(0, 25)?.map((item: any, index: any) => {
-              console.log(getPost, "loading");
-
               return (
                 <Col className="text-center" span={24} lg={24} key={index}>
                   <div className="container">
@@ -130,35 +121,6 @@ function PostCard({
                           </h2>
                         </Link>
                       }
-                      actions={[
-                        <>
-                          <div>
-                            <Link href={`/posts/${item?.id}`}>
-                              <span
-                                style={{
-                                  fontSize: "17px",
-                                  color: "orange",
-                                }}
-                              >
-                                {item?.comments?.length}
-                              </span>{" "}
-                              <CommentOutlined
-                                key="comment"
-                                style={{
-                                  fontSize: "19px",
-                                  color: "green",
-                                }}
-                              />
-                            </Link>
-                          </div>
-                          ,
-                        </>,
-                        <DeleteOutlined
-                          key="delete"
-                          style={{ fontSize: "19px", color: "red" }}
-                          onClick={showModal}
-                        />,
-                      ]}
                     >
                       <Meta
                         avatar={<Avatar src={item?.photos[0]?.url} />}
@@ -166,21 +128,30 @@ function PostCard({
                         description={item?.body}
                         style={{ textAlign: "left" }}
                       />
+
+                      <Link href={`/posts/${item?._id}`}>
+                        <span
+                          style={{
+                            fontSize: "17px",
+                            color: "orange",
+                          }}
+                        >
+                          {item?.comments?.length}
+                        </span>{" "}
+                        <CommentOutlined
+                          key="comment"
+                          style={{
+                            fontSize: "19px",
+                            color: "green",
+                          }}
+                        />
+                      </Link>
                     </Card>
                   </div>
                 </Col>
               );
             })
           )}
-          <Modal
-            title="Are you sure to delete this post?"
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
-          >
-            <br />
-            <br />
-          </Modal>
         </Row>
       </div>
     </div>

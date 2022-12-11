@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 
 function Post() {
   const [title, setTitle] = useState("");
-  //   const [userId, setUserId] = useState("");
   const [body, setBody] = useState("");
   const router = useRouter();
   const userId = JSON.parse(localStorage.getItem("userId") as string);
@@ -17,7 +16,7 @@ function Post() {
       });
       console.log(x?.status, "success");
       if (x?.status === 200) {
-        router.push("/");
+        router.push("/profile");
       }
     } catch (er) {
       console.log(er);
@@ -40,7 +39,8 @@ function Post() {
 
         <div className="form-group">
           <label htmlFor="">Enter Description</label>
-          <input
+
+          <textarea
             className="form-control"
             value={body}
             onChange={(e) => setBody(e.target.value)}
@@ -53,7 +53,7 @@ function Post() {
           type="button"
           onClick={sendDatatoApp}
         >
-          Save
+          Post
         </button>
       </form>
     </div>

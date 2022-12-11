@@ -28,7 +28,7 @@ export const fetchComments = () => {
   return (dispatch: any) => {
     dispatch(fetchCommentLoad());
     axios
-      .get(`${process.env.NEXT_PUBLIC_APP_READER_BASE_URL}/comments`, {
+      .get(`${process.env.NEXT_PUBLIC_APP_READER_BASE_URL}/show-comment`, {
         headers: {
           "Content-Type": "application/json",
         },
