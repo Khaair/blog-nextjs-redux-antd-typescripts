@@ -3,7 +3,8 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import commentReducers from "./commentReducers"; 
 import userReducers from "./userReducers";
-import signupReducers from "./signupReducers";
+import userPhotoReducers from "./userPhotoReducers";
+
 
 
 import postReducers from "./postReducers";
@@ -16,7 +17,7 @@ const rootReducer = combineReducers({
   posts: postReducers,
   comments: commentReducers,
   users: userReducers,
-  signupReducers: userReducers
+  usersphoto: userPhotoReducers,
 
 });
 // export default rootReducer;

@@ -58,6 +58,7 @@ function Details({
     });
     setSinglePostInfo(singlePosts);
   }, [commentInfo?.commentData, id, postsInfo?.postsData, userInfo?.usersData]);
+
   const userNamee = JSON.parse(localStorage.getItem("userName") as string);
 
   const sendDatatoApp = async () => {

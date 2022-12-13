@@ -8,7 +8,9 @@ import { Card } from "antd";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Home from "./home";
+import Moment from "react-moment";
 import axios from "axios";
+import moment from "moment";
 function PostCard({
   posts,
   postsInfo,
@@ -43,7 +45,7 @@ function PostCard({
     users();
     fetchPhotos();
   }, [posts, comments, users]);
-
+  console.log(postsInfo?.postsData, "postsInfo?.postsData hereeeeeee");
   //  get comment filter
   useEffect(() => {
     const posts = postsInfo?.postsData?.map((post: any) => {
@@ -82,7 +84,10 @@ function PostCard({
       return error;
     }
   };
-
+  let sortedArraygetPost = getPost?.sort(
+    (a: any, b: any) =>
+      (new Date(b.postTime) as any) - (new Date(a.postTime) as any)
+  );
   return (
     <div className="post-card-area">
       <div className="container">
@@ -100,17 +105,48 @@ function PostCard({
               </div>
             </Col>
           ) : (
-            getPost?.slice(0, 25)?.map((item: any, index: any) => {
+            sortedArraygetPost?.slice(0, 25)?.map((item: any, index: any) => {
               return (
                 <Col className="text-center" span={24} lg={24} key={index}>
                   <div className="container">
-                    <Card
+                    <Link href={`/posts/${item?._id}`}>
+                      <Card>
+                        <div className="container">
+                          <h2>{item?.title}</h2>
+
+                          <div className="post-profile-card">
+                            <div className="post-profile-card-avater-name mt-3">
+                              <Avatar src={item?.photos[0]?.url} />
+                              <h6 className="mx-2 ">
+                                {item?.users[0]?.username}
+                              </h6>
+                            </div>
+                            <div>
+                              <p>{moment(item?.postTime).format("lll")}</p>
+                            </div>
+                          </div>
+                          <p className="post-profile-card-body">
+                            {" "}
+                            {item?.body}
+                          </p>
+
+                          <div className="post-comment-counter">
+                            <p> {item?.comments?.length}</p>
+                            <CommentOutlined
+                              key="comment"
+                              style={{
+                                fontSize: "19px",
+                                color: "green",
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </Card>
+                    </Link>
+
+                    {/* <Card
                       style={{ marginBottom: "20px" }}
                       cover={
-                        // <Image
-                        //   alt="example"
-                        //   src="https://dgerma-s3access.s3.amazonaws.com/public/products/variants/p5La4Zmxi-red-and-light-blue-fabric-with-large-folds.jpg"
-                        // />
                         <Link href={`/posts/${item?._id}`}>
                           <h2
                             className="container text-left"
@@ -119,6 +155,8 @@ function PostCard({
                             {" "}
                             {item?.title}
                           </h2>
+                          <p>{moment(item?.postTime).format("LL")}</p>
+                          <p>{item?.body}</p>
                         </Link>
                       }
                     >
@@ -146,7 +184,7 @@ function PostCard({
                           }}
                         />
                       </Link>
-                    </Card>
+                    </Card> */}
                   </div>
                 </Col>
               );

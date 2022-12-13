@@ -180,8 +180,8 @@ padding-bottom: 20px;
 }
 
 .menubar-logo img {
-  height: 74px;
-  margin-top: 6px;
+  height: 65px;
+  margin-top: 13px;
   margin-bottom: 0px;
 }
 
@@ -448,4 +448,29 @@ padding-left: 97px;
   padding-left: 20px;
 }
 
+.post-profile-card{
+  display: grid;
+  justify-content: left;
+}
+.post-profile-card-avater-name{
+  display: flex;
+}
 
+.post-profile-card-body{
+  text-align: justify;
+}
+
+.post-comment-counter{
+  display: flex;
+  justify-content: left;  
+}
+.post-comment-counter p{
+  font-size: 20px;
+  color: orange;
+  margin-top: -10px;
+  padding-right: 5px;
+}
+.profile-picture-area img{
+  height: 100px;
+  width: auto;
+}

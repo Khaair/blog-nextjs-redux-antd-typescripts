@@ -4,7 +4,7 @@ import SearchBar from "./searchBar";
 export default function Home() {
   return (
     <>
-      <Row className="mt-5 text-center">
+      <Row className="text-center">
         <Col span={24}>
           <div>
             <SearchBar />

@@ -1,21 +1,44 @@
+import { DeleteOutlined, UploadOutlined } from "@ant-design/icons";
 import {
-  DeleteOutlined,
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
-import { Avatar, Card, Col, Modal, Row } from "antd";
-import Meta from "antd/es/card/Meta";
+  Avatar,
+  Button,
+  Card,
+  Col,
+  message,
+  Modal,
+  Row,
+  Upload,
+  UploadProps,
+} from "antd";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import Layout from "../layouts";
-import Post from "./post";
 import { fetchComments } from "../state-management/actions/comments";
 import { fetchUsers } from "../state-management/actions/users";
 import { fetchPosts } from "../state-management/actions/posts";
+import { fetchUsersPhotos } from "../state-management/actions/userphoto";
+
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+const getBase64 = (img: any, callback: any) => {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(img);
+};
+const beforeUpload = (file: any) => {
+  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+  if (!isJpgOrPng) {
+    message.error("You can only upload JPG/PNG file!");
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error("Image must smaller than 2MB!");
+  }
+  return isJpgOrPng && isLt2M;
+};
+
 function Profile({
   posts,
   postsInfo,
@@ -23,6 +46,8 @@ function Profile({
   commentInfo,
   users,
   userInfo,
+  usersphoto,
+  usersphotoInfo,
 }: any) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isModalOpenEdit, setIsModalOpenEdit] = useState<boolean>(false);
@@ -32,11 +57,41 @@ function Profile({
   const [getUsers, setUsers] = useState<any>([]);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [SinglePhotoInfo, setSinglePhotoInfo] = useState("");
+
   const [notificationMsg, setNotificationMsg] = useState("");
   const [grettingsMsg, setGrettingsMsg] = useState<string>("");
   const [editTitle, setEditTitle] = useState<string>("");
   const [editbody, setEditBody] = useState<string>("");
   const [getPostId, setPostId] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState();
+  const handleChange = (info: any) => {
+    if (info.file.status === "uploading") {
+      setLoading(true);
+      return;
+    }
+    if (info.file.status === "done") {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, (url: any) => {
+        setLoading(false);
+        setImageUrl(url);
+      });
+    }
+  };
+  console.log(SinglePhotoInfo?.at(-1)?.url, "SinglePhotoInfo hereeee haha");
+  const uploadButton = (
+    <div>
+      {loading ? <LoadingOutlined /> : <PlusOutlined />}
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>
+  );
 
   const userId = JSON.parse(localStorage.getItem("userId") as string);
 
@@ -45,7 +100,8 @@ function Profile({
     posts();
     comments();
     users();
-  }, [posts, comments, users]);
+    usersphoto();
+  }, [posts, comments, users, usersphoto]);
 
   //  get comment filter
   useEffect(() => {
@@ -117,12 +173,17 @@ function Profile({
     fetchSingleUser();
   }, [userId]);
 
+  const currentTime = new Date();
+
+  console.log(currentTime, "currentTime");
+
   const sendDatatoApp = async () => {
     try {
       let x = await axios.post("http://localhost:8080/api/savepost", {
         title,
         body,
         userId,
+        postTime: currentTime,
       });
       console.log(x?.status, "success");
       if (x?.status === 200) {
@@ -148,21 +209,6 @@ function Profile({
       console.log(er);
     }
   };
-
-  useEffect(() => {
-    var today = new Date();
-    var curHr = today.getHours();
-
-    console.log(curHr, "getHours");
-
-    if (curHr < 12) {
-      setGrettingsMsg("good morning");
-    } else if (curHr < 18) {
-      setGrettingsMsg("good afternoon");
-    } else {
-      setGrettingsMsg("good evening");
-    }
-  }, [userId]);
 
   const handleOkEdit = () => {
     setIsModalOpenEdit(false);
@@ -213,17 +259,88 @@ function Profile({
       console.log(er);
     }
   };
+  const userNamee = JSON.parse(localStorage.getItem("userName") as string);
+
+  const sendUserPhotoApp = async () => {
+    try {
+      let x = await axios.post("http://localhost:8080/api/save-user-photo", {
+        username: userNamee,
+        url: imageUrl,
+        userId,
+      });
+      console.log(x?.status, "success");
+      if (x?.status === 200) {
+        handleCancel();
+        posts();
+        usersphoto();
+      }
+    } catch (er) {
+      console.log(er);
+    }
+  };
+
+  useEffect(() => {
+    const usersphotoo = usersphotoInfo?.usersPhotosData?.filter(
+      (photo: any) => {
+        if (photo?.userId === userId) {
+          return {
+            ...photo,
+          };
+        }
+      }
+    );
+
+    setSinglePhotoInfo(usersphotoo);
+  }, [userId, usersphotoInfo?.usersPhotosData]);
 
   return (
     <>
       <Layout>
         <div className="deshboard-area">
           <div className="container">
+            <div className="row">
+              <div className="col-lg-8">
+                <div className="profile-picture-area d-flex">
+                  <div>
+                    <img src={SinglePhotoInfo?.at(-1)?.url} />
+                  </div>
+                  <div>
+                    <Upload
+                      name="avatar"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      showUploadList={false}
+                      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                      beforeUpload={beforeUpload}
+                      onChange={handleChange}
+                    >
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt="avatar"
+                          style={{
+                            width: "100%",
+                          }}
+                        />
+                      ) : (
+                        uploadButton
+                      )}
+                    </Upload>
+                  </div>
+                </div>
+                <button onClick={sendUserPhotoApp} className="btn btn-success">
+                  Upload
+                </button>
+              </div>
+              <div className="col-lg-4">
+                <button onClick={showModal} className="btn btn-primary">
+                  Create post
+                </button>
+              </div>
+            </div>
+
             <Row>
-              <Col span={18}>
-                <h3>
-                  Hey! {getSingleUserData?.username},{grettingsMsg}
-                </h3>
+              <Col span={24}>
                 <form className="form">
                   <div className="card-body">
                     <div className="row">
@@ -300,12 +417,6 @@ function Profile({
                     </div>
                   </div>
                 </form>
-              </Col>
-
-              <Col span={6}>
-                <button onClick={showModal} className="btn btn-primary">
-                  Create post
-                </button>
               </Col>
             </Row>
 
@@ -444,11 +555,17 @@ function Profile({
   );
 }
 
-const mapStateToProps = (state: { posts: any; comments: any; users: any }) => {
+const mapStateToProps = (state: {
+  posts: any;
+  comments: any;
+  users: any;
+  usersphoto: any;
+}) => {
   return {
     postsInfo: state?.posts,
     commentInfo: state?.comments,
     userInfo: state?.users,
+    usersphotoInfo: state?.usersphoto,
   };
 };
 const mapDispatchToProps = (dispatch: any) => {
@@ -456,6 +573,7 @@ const mapDispatchToProps = (dispatch: any) => {
     posts: () => dispatch(fetchPosts()),
     comments: () => dispatch(fetchComments()),
     users: () => dispatch(fetchUsers()),
+    usersphoto: () => dispatch(fetchUsersPhotos()),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

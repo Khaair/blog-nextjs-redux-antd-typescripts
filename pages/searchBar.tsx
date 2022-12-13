@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-
+import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { fetchComments } from "../state-management/actions/comments";
 import { fetchUsers } from "../state-management/actions/users";
 import { fetchPosts } from "../state-management/actions/posts";
 import PostCard from "./postCard";
 import { Card } from "antd";
-
+import Link from "next/link";
 function SearchBar({
   posts,
   postsInfo,
@@ -17,6 +17,8 @@ function SearchBar({
 }: any) {
   const [filteredData, setFilteredData] = useState([]);
   const [wordEntered, setWordEntered] = useState("");
+  const [grettingsMsg, setGrettingsMsg] = useState<string>("");
+
   console.log(filteredData, "search");
 
   // dispatch post and comments
@@ -44,10 +46,28 @@ function SearchBar({
     setFilteredData([]);
     setWordEntered("");
   };
+  useEffect(() => {
+    var today = new Date();
+    var curHr = today.getHours();
 
+    console.log(curHr, "getHours");
+
+    if (curHr < 12) {
+      setGrettingsMsg("শুভ সকাল! 👋");
+    } else if (curHr < 18) {
+      setGrettingsMsg("শুভ অপরাহ্ন! 👋");
+    } else {
+      setGrettingsMsg("শুভ সন্ধা! 👋");
+    }
+  }, []);
   return (
     <>
       <div className="searchbar-area">
+        <div className="row">
+          <div className="col-lg-12">
+            <h4 className="mb-3">{grettingsMsg}</h4>
+          </div>
+        </div>
         <div className="row">
           <div className="col-lg-12">
             <div>
@@ -69,12 +89,14 @@ function SearchBar({
                           <div className="container">
                             <div className="row">
                               <div className="col-lg-12">
-                                <Card>
-                                  <div key={index} className="searchres">
-                                    <h3>{item?.title} </h3>
-                                    <p>{item?.body}</p>
-                                  </div>
-                                </Card>
+                                <Link href={`/posts/${item?._id}`}>
+                                  <Card>
+                                    <div key={index} className="searchres">
+                                      <h3>{item?.title} </h3>
+                                      <p>{item?.body}</p>
+                                    </div>
+                                  </Card>
+                                </Link>
                               </div>
                             </div>
                           </div>
