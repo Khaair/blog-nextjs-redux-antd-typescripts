@@ -11,6 +11,10 @@ import Home from "./home";
 import Moment from "react-moment";
 import axios from "axios";
 import moment from "moment";
+import { RiThumbUpLine } from "react-icons/ri";
+import { RiWechat2Line } from "react-icons/ri";
+import { RiThumbUpFill } from "react-icons/ri";
+
 function PostCard({
   posts,
   postsInfo,
@@ -29,11 +33,7 @@ function PostCard({
 
   const [singlePostId, setSinglePostId] = useState<any>(undefined);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  // const handleOk = () => {
-  //   setIsModalOpen(false);
-  //   alert("After clicking ok delete api will call");
-  // };
+  const [likeColorChange, setLikeColorChange] = useState<boolean>(true);
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -88,6 +88,32 @@ function PostCard({
     (a: any, b: any) =>
       (new Date(b.postTime) as any) - (new Date(a.postTime) as any)
   );
+
+  const LikeColorChangeHandler = () => {
+    likeColorChange === true
+      ? setLikeColorChange(false)
+      : setLikeColorChange(true);
+  };
+  const fetchuserid = JSON.parse(localStorage.getItem("userId") as string);
+
+  const sendReactionDataToApp = async (postid: any) => {
+    LikeColorChangeHandler();
+    try {
+      let x = await axios.post("http://localhost:8080/api/save-like", {
+        status: likeColorChange,
+        postId: postid,
+        userId: fetchuserid,
+      });
+      console.log(x?.status, "success");
+      if (x?.status === 200) {
+        handleCancel();
+        posts();
+      }
+    } catch (er) {
+      console.log(er);
+    }
+  };
+
   return (
     <div className="post-card-area">
       <div className="container">
@@ -109,10 +135,12 @@ function PostCard({
               return (
                 <Col className="text-center" span={24} lg={24} key={index}>
                   <div className="container">
-                    <Link href={`/posts/${item?._id}`}>
+                    <div className="mt-2">
                       <Card>
                         <div className="container">
-                          <h2>{item?.title}</h2>
+                          <Link href={`/posts/${item?._id}`}>
+                            <h2>{item?.title}</h2>
+                          </Link>
 
                           <div className="post-profile-card">
                             <div className="post-profile-card-avater-name mt-3">
@@ -132,59 +160,40 @@ function PostCard({
 
                           <div className="post-comment-counter">
                             <p> {item?.comments?.length}</p>
-                            <CommentOutlined
-                              key="comment"
+                            {likeColorChange === true ? (
+                              <RiThumbUpFill
+                                style={{
+                                  fontSize: "36px",
+                                  color: "green",
+                                  paddingRight: "10px",
+                                }}
+                                role="button"
+                                onClick={() => sendReactionDataToApp(item?._id)}
+                              />
+                            ) : (
+                              <RiThumbUpLine
+                                style={{
+                                  fontSize: "36px",
+                                  color: "green",
+                                  paddingRight: "10px",
+                                }}
+                                role="button"
+                                onClick={() => sendReactionDataToApp(item?._id)}
+                              />
+                            )}
+
+                            <p> {item?.comments?.length}</p>
+                            <RiWechat2Line
                               style={{
-                                fontSize: "19px",
+                                fontSize: "36px",
                                 color: "green",
+                                paddingRight: "10px",
                               }}
                             />
                           </div>
                         </div>
                       </Card>
-                    </Link>
-
-                    {/* <Card
-                      style={{ marginBottom: "20px" }}
-                      cover={
-                        <Link href={`/posts/${item?._id}`}>
-                          <h2
-                            className="container text-left"
-                            style={{ paddingTop: "20px" }}
-                          >
-                            {" "}
-                            {item?.title}
-                          </h2>
-                          <p>{moment(item?.postTime).format("LL")}</p>
-                          <p>{item?.body}</p>
-                        </Link>
-                      }
-                    >
-                      <Meta
-                        avatar={<Avatar src={item?.photos[0]?.url} />}
-                        title={item?.users[0]?.username}
-                        description={item?.body}
-                        style={{ textAlign: "left" }}
-                      />
-
-                      <Link href={`/posts/${item?._id}`}>
-                        <span
-                          style={{
-                            fontSize: "17px",
-                            color: "orange",
-                          }}
-                        >
-                          {item?.comments?.length}
-                        </span>{" "}
-                        <CommentOutlined
-                          key="comment"
-                          style={{
-                            fontSize: "19px",
-                            color: "green",
-                          }}
-                        />
-                      </Link>
-                    </Card> */}
+                    </div>
                   </div>
                 </Col>
               );

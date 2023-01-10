@@ -136,7 +136,6 @@ a {
 
 .post-card-area{
   background-color: #F3F4F8;
-  margin-bottom: 30px;
 }
 
      /*============================================
@@ -467,7 +466,6 @@ padding-left: 97px;
 .post-comment-counter p{
   font-size: 20px;
   color: orange;
-  margin-top: -10px;
   padding-right: 5px;
 }
 .profile-picture-area img{
